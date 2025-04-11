@@ -2,8 +2,25 @@ import Head from 'next/head';
 import Header from '../../components/Header';
 import FlightsListing from '../../components/FlightsListing';
 import Footer from '../../components/Footer';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 
 export default function Flights() {
+  const [flights, setFlights] = useState([]);
+
+  useEffect(() => {
+    const fetchFlights = async () => {
+      try {
+        const response = await axios.get('/api/flights');
+        setFlights(response.data);
+      } catch (error) {
+        console.error('Error fetching flights:', error);
+      }
+    };
+
+    fetchFlights();
+  }, []);
+
   return (
     <div>
       <Head>
@@ -13,7 +30,7 @@ export default function Flights() {
       </Head>
 
       <Header />
-      <FlightsListing />
+      <FlightsListing flights={flights} />
       <Footer />
     </div>
   );
